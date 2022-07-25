@@ -1,28 +1,43 @@
 from flask import Flask, render_template, session, redirect, url_for, request
-from flask_wtf import FlaskForm
-from wtforms import StringField,SubmitField
-from wtforms.validators import DataRequired
 app = Flask (__name__)
 
 app.config['SECRET_KEY']='oursecretkey'
-
-class MyForm(FlaskForm):
-    username=StringField('Enter Username:')
-    password=StringField('Enter Password:')
-    submit=SubmitField('Submit')
-
-@app.route('/', methods=['GET','POST'])
+def checkUpper(pword):
+    result=False
+    for i in pword:
+        if i.isupper():
+            result = True
+            break
+    return result
+def checkLower(pword):
+    result=False
+    for i in pword:
+        if i.islower():
+            result = True
+            break
+    return result
+def checkLength(pword):
+    num=0
+    for i in pword:
+        num+=1
+    if num>8:
+        result=True
+    else:
+        result=False
+    return result
+def checkNum(pword):
+    return (pword[-1].isdigit())
+@app.route('/')
 def index():
-    form= MyForm()
-    if form.validate_on_submit():
-        session['username'] = form.username.data
-        session['password'] = form.password.data
-        return redirect(url_for('report'))
-    return render_template('index.html', form=form)
+    return render_template('index.html',)
 @app.route('/report')
 def report():
-    pword=request.args.get('password')
-    return render_template('report.html',pword=pword)
+    password=request.args.get('password')
+    badlen= checkLength(password)
+    badup= checkUpper(password)
+    badlow= checkLower(password)
+    badnum= checkNum(password)
+    return render_template('report.html',badlen=badlen,badup=badup,badlow=badlow,badnum=badnum)
 
 if __name__ == '__main__':
     app.run(debug=True)

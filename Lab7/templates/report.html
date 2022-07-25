@@ -2,8 +2,26 @@
 
 {% block content %}
 <p>
-{% if password.isupper() %}
-Needs upper
+{% if (not badlen) %}
+Needs More Characters
+{% endif %}
+</p>
+<p>
+{% if (not badlow) %}
+Needs a lowercase
+{% endif %}
+</p>
+<p>
+{% if (not badup) %}
+Needs an uppercase
+{% endif %}
+</p>
+<p>
+{% if (not badnum) %}
+Needs a number at the end
+{% endif %}
+{% if (badnum and badlen and badup and badnum) %}
+good job
 {% endif %}
 </p>
 {% endblock %}
